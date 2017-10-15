@@ -1,14 +1,16 @@
 package ru.mit.spbau.lobanov.lexer;
 
+import jflex.Main;
 import ru.mit.spbau.lobanov.lexer.token.Token;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class Application {
     public static void main(String[] args) throws IOException {
-//            Main.generate(new File("C:/Git workspace/lexer/src/main/resources/lexer.jflex"));
+//       Main.generate(new File("C:/Git workspace/formal-languages/src/main/resources/lexer.jflex"));
         if (args.length != 1) {
             System.out.println("One argument expected: path to file with L-code");
             return;

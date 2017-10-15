@@ -23,14 +23,15 @@ import ru.mit.spbau.lobanov.lexer.token.*;
     }
 %}
 
-Space = (\r | \n | \r\n | \s | \f | \t | " ")*
+Space = (\r\n | \r | \n | \s | \f | \t | " ")*
 KeyWord = if | then | else | while | do | read | write | begin | end
-Operator = "+" | "−" | "∗" | "/" "%" | "==" | "!=" | ">" | ">=" | "<" | "<=" | "&&" | "||" | "(" | ")" | ";"
+Operator = "+" | "-" | "*" | "/" | "%" | "==" | "!=" | ">" | ">=" | "<" | "<=" | "&&" | "||" | "(" | ")" | ";"
 Comment = \/\/[^\n\r]*
-Integer = ([0-9]|[1-9](_[0-9])*[0-9])
-Digits = ([0-9]|[0-9](_[0-9])*[0-9])
+Boolean = true | false
+Integer = ([0-9]|[1-9]([_0-9])*[0-9])
+Digits = ([0-9]|[0-9]([_0-9])*[0-9])
 ExponentPart = (e|E) ("+"|"-")? {Digits}
-Float = {Digits} "." {Digits}? {ExponentPart}? f? | "." {Digits} {ExponentPart}? f? | {Digits} {ExponentPart} f? | {Digits} {ExponentPart} f?
+Float = {Digits} "." {Digits}? {ExponentPart}? f? | "." {Digits} {ExponentPart}? f? | {Digits} {ExponentPart}? f | {Digits} {ExponentPart} f?
 Identifier = [a-z_]([a-z] | \d | _)*
 
 
@@ -48,6 +49,8 @@ Identifier = [a-z_]([a-z] | \d | _)*
 
 {Integer} {return create(IntegerToken::create);}
 
+{Boolean} {return create(BooleanToken::create);}
+
 {Identifier} {return create(IdentifierToken::create);}
 
-[^] { throw new RuntimeException("Cant parse token: \"" + yytext() + "\""); }
+[^] { throw new RuntimeException("Cant parse token: \"" + yytext() + "\" at " + yyline + " line " + yycolumn + " column"); }

@@ -21,6 +21,7 @@ public final class LexerUtils {
             Token token = lexer.yylex();
             while (token != null) {
                 tokens.add(token);
+                System.out.println(token);
                 token = lexer.yylex();
             }
             return tokens;

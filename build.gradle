@@ -9,6 +9,16 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'ru.mit.spbau.lobanov.lexer.Application'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 dependencies {
     // https://mvnrepository.com/artifact/de.jflex/jflex
     compile group: 'de.jflex', name: 'jflex', version: '1.6.1'

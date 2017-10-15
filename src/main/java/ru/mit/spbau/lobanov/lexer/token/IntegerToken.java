@@ -8,7 +8,7 @@ public class IntegerToken extends Token {
 
     private IntegerToken(int lineIndex, int start, int end, String notation) {
         super(lineIndex, start, end);
-        this.value = new BigInteger(notation);
+        this.value = new BigInteger(notation.replaceAll("_", ""));
     }
 
     public BigInteger getValue() {
