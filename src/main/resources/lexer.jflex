@@ -25,7 +25,7 @@ import ru.mit.spbau.lobanov.lexer.token.*;
 
 Space = (\r\n | \r | \n | \s | \f | \t | " ")*
 KeyWord = if | then | else | while | do | read | write | begin | end
-Operator = "+" | "-" | "*" | "/" | "%" | "==" | "!=" | ">" | ">=" | "<" | "<=" | "&&" | "||" | "(" | ")" | ";"
+Operator = "+" | "-" | "*" | "/" | "%" | ":=" | "==" | "!=" | ">" | ">=" | "<" | "<=" | "&&" | "||" | "(" | ")" | ";"
 Comment = \/\/[^\n\r]*
 Boolean = true | false
 Integer = ([0-9]|[1-9]([_0-9])*[0-9])
@@ -33,8 +33,6 @@ Digits = ([0-9]|[0-9]([_0-9])*[0-9])
 ExponentPart = (e|E) ("+"|"-")? {Digits}
 Float = {Digits} "." {Digits}? {ExponentPart}? f? | "." {Digits} {ExponentPart}? f? | {Digits} {ExponentPart}? f | {Digits} {ExponentPart} f?
 Identifier = [a-z_]([a-z] | \d | _)*
-
-
 %%
 
 {Space} {break;}

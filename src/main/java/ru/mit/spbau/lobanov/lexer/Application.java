@@ -1,9 +1,7 @@
 package ru.mit.spbau.lobanov.lexer;
 
-import jflex.Main;
 import ru.mit.spbau.lobanov.lexer.token.Token;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;

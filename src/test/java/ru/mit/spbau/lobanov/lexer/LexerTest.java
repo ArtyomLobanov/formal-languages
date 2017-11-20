@@ -60,10 +60,10 @@ public class LexerTest {
     @Test
     public void operatorsTest() throws Exception {
         final List<Token> result = parse(Paths.get(LexerTest.class.getResource("/operators_test.l").toURI()));
-        assertEquals(16, result.size());
+        assertEquals(17, result.size());
         assertTrue(result.stream().allMatch(OperatorToken.class::isInstance));
         assertArrayEquals(new OperatorTokenType[]{PLUS, MINUS, MULTIPLY, DIVIDE, MOD, EQUAL, NOT_EQUAL, GREATER,
-                        GREATER_OR_EQUAL, LOWER, LOWER_OR_EQUAL, AND, OR, LEFT_BRACKET, RIGHT_BRACKET, SEMICOLON},
+                        GREATER_OR_EQUAL, LOWER, LOWER_OR_EQUAL, AND, OR, LEFT_BRACKET, RIGHT_BRACKET, SEMICOLON, SET},
                 result.stream()
                         .map(OperatorToken.class::cast)
                         .map(OperatorToken::getType)

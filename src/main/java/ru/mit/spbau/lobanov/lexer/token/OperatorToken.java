@@ -9,6 +9,7 @@ public class OperatorToken extends Token {
         MULTIPLY("*"),
         DIVIDE("/"),
         MOD("%"),
+        SET(":="),
         EQUAL("=="),
         NOT_EQUAL("!="),
         GREATER(">"),
