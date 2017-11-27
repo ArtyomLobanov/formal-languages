@@ -1,0 +1,16 @@
+﻿# Инструкция по сборке:
+
+git clone https://github.com/ArtyomLobanov/formal-languages.git
+cd formal-languages
+git checkout l-interpreter
+
+gradlew jar
+
+cd build
+cd libs
+
+java -jar parser-v1.jar (Путь к файлу) 
+
+Пример:
+java -jar parser-v1.jar "С:\workspace\example.txt"
+
