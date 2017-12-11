@@ -4,6 +4,7 @@ package ru.spbau.mit.ast
 
 import org.antlr.v4.runtime.BufferedTokenStream
 import org.antlr.v4.runtime.CharStream
+import org.antlr.v4.runtime.tree.TerminalNode
 import ru.spbau.mit.parser.LLanguageLexer
 import ru.spbau.mit.parser.LLanguageParser
 import ru.spbau.mit.parser.LLanguageParser.*
@@ -76,8 +77,6 @@ object ASTBuilder {
 
     fun visitUnitArithmeticExpression(expression: UnitArithmeticExpressionContext): ArithmeticExpression {
         return when {
-            expression.functionCall() !== null ->
-                visitFunctionCall(expression.functionCall())
             expression.IDENTIFIER() !== null ->
                 IdentifierExpression(expression.IDENTIFIER().symbol.text, expression.IDENTIFIER().symbol.line)
             expression.INTEGER() !== null ->
@@ -144,8 +143,8 @@ object ASTBuilder {
 
     fun visitFunctionCall(callStatement: FunctionCallContext): FunctionCall {
         val name = callStatement.IDENTIFIER().symbol.text
-        val arguments = callStatement.arguments().expression()
-                .map(this::visitExpression)
+        val arguments = callStatement.arguments().IDENTIFIER()
+                .map(this::visitIdentifierExpression)
         return FunctionCall(name, arguments, callStatement.start.line)
     }
 
@@ -185,12 +184,14 @@ object ASTBuilder {
                 visitReadStatement(statement.readStatement())
             statement.writeStatement() != null ->
                 visitWriteStatement(statement.writeStatement())
+            statement.functionCall() != null ->
+                visitFunctionCall(statement.functionCall())
             else -> throw SyntaxException(statement.start.line)
         }
     }
 
     fun visitIfStatement(statement: IfStatementContext): IfStatement {
-        val condition = visitLogicExpression(statement.logicExpression())
+        val condition = visitExpression(statement.expression())
         val body = visitBlock(statement.blockWithBraces(0).block())
         val elseBody = when (statement.blockWithBraces(1)?.block()) {
             null -> null
@@ -200,7 +201,7 @@ object ASTBuilder {
     }
 
     fun visitWhileStatement(loop: WhileStatementContext): WhileStatement {
-        val condition = visitLogicExpression(loop.logicExpression())
+        val condition = visitExpression(loop.expression())
         val body = visitBlock(loop.blockWithBraces().block())
         return WhileStatement(condition, body, loop.start.line)
     }
@@ -215,12 +216,14 @@ object ASTBuilder {
     }
 
     fun visitReadStatement(statement: ReadStatementContext): ReadStatement {
-        val identifier = IdentifierExpression(statement.IDENTIFIER().symbol.text, statement.IDENTIFIER().symbol.line)
-        return ReadStatement(identifier, statement.start.line)
+        return ReadStatement(visitIdentifierExpression(statement.IDENTIFIER()), statement.start.line)
     }
 
     fun visitWriteStatement(statement: WriteStatementContext): WriteStatement {
-        val identifier = IdentifierExpression(statement.IDENTIFIER().symbol.text, statement.IDENTIFIER().symbol.line)
-        return WriteStatement(identifier, statement.start.line)
+        return WriteStatement(visitIdentifierExpression(statement.IDENTIFIER()), statement.start.line)
+    }
+
+    fun visitIdentifierExpression(identifier: TerminalNode) : IdentifierExpression {
+        return IdentifierExpression(identifier.symbol.text, identifier.symbol.line)
     }
 }

@@ -45,32 +45,30 @@ class ParsingTests {
                 """
                        //nothing
 
-                        foo(2, 3);
-                        foo(boo(y, t), x);
+                        foo();
+                        foo(c);
+                        foo(a, b);
                 """
         )).root
         val expectedTree = File(
                 Block(
                         listOf(
                                 FunctionCall("foo",
-                                        listOf(
-                                                LiteralExpression(2, 4),
-                                                LiteralExpression(3, 4)
-                                        ),
+                                        listOf(),
                                         4
                                 ),
                                 FunctionCall("foo",
                                         listOf(
-                                                FunctionCall("boo",
-                                                        listOf(
-                                                                IdentifierExpression("y", 5),
-                                                                IdentifierExpression("t", 5)
-                                                        ),
-                                                        5
-                                                ),
-                                                IdentifierExpression("x", 5)
+                                                IdentifierExpression("c", 5)
                                         ),
                                         5
+                                ),
+                                FunctionCall("foo",
+                                        listOf(
+                                                IdentifierExpression("a", 6),
+                                                IdentifierExpression("b", 6)
+                                        ),
+                                        6
                                 )
                         ),
                         4

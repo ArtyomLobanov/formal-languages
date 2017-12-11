@@ -91,7 +91,7 @@ data class ArithmeticBinaryExpression(
 
 data class FunctionCall(
         val function: String,
-        val arguments: List<Expression>,
+        val arguments: List<IdentifierExpression>,
         override val line: Int) : ArithmeticExpression() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitFunctionCall(this)
@@ -109,7 +109,7 @@ data class FunctionDefinition(
 }
 
 data class WhileStatement(
-        val condition: LogicExpression,
+        val condition: Expression,
         val body: Block,
         override val line: Int) : Statement() {
     override fun visit(visitor: ASTVisitor) {
@@ -118,7 +118,7 @@ data class WhileStatement(
 }
 
 data class IfStatement(
-        val condition: LogicExpression,
+        val condition: Expression,
         val body: Block,
         val elseBody: Block?,
         override val line: Int) : Statement() {

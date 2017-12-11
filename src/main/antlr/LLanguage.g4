@@ -9,6 +9,7 @@ statement
     | expressionStatement
     | whileStatement
     | ifStatement
+    | functionCall
     | assignmentStatement
     | writeStatement
     | readStatement
@@ -23,8 +24,8 @@ ifStatement : 'if' '(' expression ')' blockWithBraces ('else' blockWithBraces)?;
 assignmentStatement : IDENTIFIER ':=' arithmeticExpression LINE_SEPARATOR;
 expressionStatement : expression LINE_SEPARATOR;
 
-functionCall : IDENTIFIER '(' arguments ')';
-arguments : (expression (',' expression)*)?;
+functionCall : IDENTIFIER '(' arguments ')' LINE_SEPARATOR;
+arguments : (IDENTIFIER (',' IDENTIFIER)*)?;
 
 unitLogicExpression
     : '(' logicExpression ')'
@@ -40,8 +41,7 @@ logicExpression
     | left = logicExpression op = LOGICAL_OR right = logicExpressionHighPrioity;
 
 unitArithmeticExpression
-    : functionCall
-    | '(' arithmeticExpression ')'
+    : '(' arithmeticExpression ')'
     | IDENTIFIER
     | INTEGER;
 
