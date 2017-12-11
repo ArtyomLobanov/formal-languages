@@ -1,10 +1,14 @@
 grammar LLanguage;
 
-file : block;
-block : (statement)*;
-blockWithBraces : '{' block '}';
+file : statement;
+blockWithBraces : '{' statement '}';
 
 statement
+    : primaryStatement
+    | doubleStatement
+    ;
+
+primaryStatement
     : definitionStatment
     | expressionStatement
     | whileStatement
@@ -23,6 +27,7 @@ whileStatement : 'while' '(' expression ')' blockWithBraces;
 ifStatement : 'if' '(' expression ')' blockWithBraces ('else' blockWithBraces)?;
 assignmentStatement : IDENTIFIER ':=' arithmeticExpression LINE_SEPARATOR;
 expressionStatement : expression LINE_SEPARATOR;
+doubleStatement : primaryStatement statement;
 
 functionCall : IDENTIFIER '(' arguments ')' LINE_SEPARATOR;
 arguments : (IDENTIFIER (',' IDENTIFIER)*)?;

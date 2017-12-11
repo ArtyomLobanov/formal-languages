@@ -4,7 +4,7 @@ package ru.spbau.mit.ast
 
 interface ASTVisitor {
     fun visitFile(file: File)
-    fun visitBlock(block: Block)
+    fun visitDoubleStatement(statement: DoubleStatement)
     fun visitComparingLogicExpression(expression: ComparingLogicExpression)
     fun visitLogicalBinaryExpression(expression: LogicalBinaryExpression)
     fun visitIdentifierExpression(identifier: IdentifierExpression)
@@ -27,23 +27,25 @@ sealed class ASTNode {
 }
 
 sealed class Statement : ASTNode()
+sealed class PrimaryStatement : Statement()
 
-data class Block(
-        val statements: List<Statement>,
-        override val line: Int) : ASTNode() {
+data class DoubleStatement(
+        val first: PrimaryStatement,
+        val second: Statement,
+        override val line: Int) : Statement() {
 
     override fun visit(visitor: ASTVisitor) {
-        visitor.visitBlock(this)
+        visitor.visitDoubleStatement(this)
     }
 }
 
-data class File(val block: Block, override val line: Int) : ASTNode() {
+data class File(val block: Statement, override val line: Int) : ASTNode() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitFile(this)
     }
 }
 
-sealed class Expression : Statement()
+sealed class Expression : PrimaryStatement()
 sealed class LogicExpression : Expression()
 sealed class ArithmeticExpression : Expression()
 
@@ -92,7 +94,7 @@ data class ArithmeticBinaryExpression(
 data class FunctionCall(
         val function: String,
         val arguments: List<IdentifierExpression>,
-        override val line: Int) : ArithmeticExpression() {
+        override val line: Int) : PrimaryStatement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitFunctionCall(this)
     }
@@ -100,9 +102,9 @@ data class FunctionCall(
 
 data class FunctionDefinition(
         val name: String,
-        val body: Block,
+        val body: Statement,
         val arguments: List<String>,
-        override val line: Int) : Statement() {
+        override val line: Int) : PrimaryStatement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitFunctionDefinition(this)
     }
@@ -110,8 +112,8 @@ data class FunctionDefinition(
 
 data class WhileStatement(
         val condition: Expression,
-        val body: Block,
-        override val line: Int) : Statement() {
+        val body: Statement,
+        override val line: Int) : PrimaryStatement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitWhileStatement(this)
     }
@@ -119,9 +121,9 @@ data class WhileStatement(
 
 data class IfStatement(
         val condition: Expression,
-        val body: Block,
-        val elseBody: Block?,
-        override val line: Int) : Statement() {
+        val body: Statement,
+        val elseBody: Statement?,
+        override val line: Int) : PrimaryStatement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitIfStatement(this)
     }
@@ -131,21 +133,23 @@ data class IfStatement(
 data class AssignmentStatement(
         val name: String,
         val expression: ArithmeticExpression,
-        override val line: Int) : Statement() {
+        override val line: Int) : PrimaryStatement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitAssignmentStatement(this)
     }
 
 }
 
-data class ReadStatement(val identifier: IdentifierExpression, override val line: Int) : Statement() {
+data class ReadStatement(val identifier: IdentifierExpression, override val line: Int) : PrimaryStatement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitReadStatement(this)
     }
 }
 
-data class WriteStatement(val identifier: IdentifierExpression, override val line: Int) : Statement() {
+data class WriteStatement(val identifier: IdentifierExpression, override val line: Int) : PrimaryStatement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitWriteStatement(this)
     }
 }
+
+

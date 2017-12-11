@@ -149,12 +149,15 @@ object ASTBuilder {
     }
 
     fun visitFile(file: FileContext): File {
-        return File(visitBlock(file.block()), file.start.line)
+        return File(visitStatement(file.statement()), file.start.line)
     }
 
-    fun visitBlock(block: BlockContext): Block {
-        val statements = block.statement().map(this::visitStatement)
-        return Block(statements, block.start.line)
+    fun visitDoubleStatement(doubleStatement: DoubleStatementContext): DoubleStatement {
+        return DoubleStatement(
+                visitPrimaryStatement(doubleStatement.primaryStatement()),
+                visitStatement(doubleStatement.statement()),
+                doubleStatement.start.line
+                )
     }
 
     fun visitAssignmentStatement(expression: AssignmentStatementContext): AssignmentStatement {
@@ -167,6 +170,14 @@ object ASTBuilder {
     }
 
     fun visitStatement(statement: StatementContext): Statement {
+        return when {
+            statement.primaryStatement() !== null -> visitPrimaryStatement(statement.primaryStatement())
+            statement.doubleStatement() !== null -> visitDoubleStatement(statement.doubleStatement())
+            else -> throw SyntaxException(statement.start.line)
+        }
+    }
+
+    fun visitPrimaryStatement(statement: PrimaryStatementContext): PrimaryStatement {
         return when {
             statement.assignmentStatement() !== null ->
                 visitAssignmentStatement(statement.assignmentStatement())
@@ -192,17 +203,17 @@ object ASTBuilder {
 
     fun visitIfStatement(statement: IfStatementContext): IfStatement {
         val condition = visitExpression(statement.expression())
-        val body = visitBlock(statement.blockWithBraces(0).block())
-        val elseBody = when (statement.blockWithBraces(1)?.block()) {
+        val body = visitStatement(statement.blockWithBraces(0).statement())
+        val elseBody = when (statement.blockWithBraces(1)?.statement()) {
             null -> null
-            else -> visitBlock(statement.blockWithBraces(1).block())
+            else -> visitStatement(statement.blockWithBraces(1).statement())
         }
         return IfStatement(condition, body, elseBody, statement.start.line)
     }
 
     fun visitWhileStatement(loop: WhileStatementContext): WhileStatement {
         val condition = visitExpression(loop.expression())
-        val body = visitBlock(loop.blockWithBraces().block())
+        val body = visitStatement(loop.blockWithBraces().statement())
         return WhileStatement(condition, body, loop.start.line)
     }
 
@@ -211,7 +222,7 @@ object ASTBuilder {
         val argumentsNames = definition.parameterNames().IDENTIFIER()
                 .map { it -> it.symbol.text }
                 .toList()
-        val body = visitBlock(definition.blockWithBraces().block())
+        val body = visitStatement(definition.blockWithBraces().statement())
         return FunctionDefinition(name, body, argumentsNames, definition.start.line)
     }
 
@@ -223,7 +234,7 @@ object ASTBuilder {
         return WriteStatement(visitIdentifierExpression(statement.IDENTIFIER()), statement.start.line)
     }
 
-    fun visitIdentifierExpression(identifier: TerminalNode) : IdentifierExpression {
+    fun visitIdentifierExpression(identifier: TerminalNode): IdentifierExpression {
         return IdentifierExpression(identifier.symbol.text, identifier.symbol.line)
     }
 }

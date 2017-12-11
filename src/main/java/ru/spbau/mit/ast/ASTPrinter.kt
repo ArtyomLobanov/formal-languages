@@ -2,26 +2,31 @@ package ru.spbau.mit.ast
 
 import java.io.PrintStream
 
-class ASTPrinter(val output: PrintStream) : ASTVisitor {
+class ASTPrinter(private val output: PrintStream) : ASTVisitor {
     private var level = 0
 
-    fun write(text: String) {
+    private fun write(text: String) {
         output.println("\t".repeat(level) + text)
     }
 
     override fun visitFile(file: File) {
         write("File(line=${file.line}, block=")
-        level++;
+        level++
         file.block.visit(this)
-        level--;
+        level--
         write(")")
     }
 
-    override fun visitBlock(block: Block) {
-        write("Block(line=${block.line}, statements:")
+    override fun visitDoubleStatement(statement: DoubleStatement) {
+        write("DoubleStatement(line=${statement.line}, ")
+        write("first=")
         level++
-        block.statements.forEach({ it.visit(this) })
-        level--;
+        statement.first.visit(this)
+        level--
+        write("right=")
+        level++
+        statement.second.visit(this)
+        level--
         write(")")
     }
 
@@ -76,7 +81,7 @@ class ASTPrinter(val output: PrintStream) : ASTVisitor {
         write("FunctionCall(line=${expression.line}, name=${expression.function}, arguments:")
         level++
         expression.arguments.forEach({ it.visit(this) })
-        level--;
+        level--
         write(")")
     }
 
@@ -92,7 +97,7 @@ class ASTPrinter(val output: PrintStream) : ASTVisitor {
         expression.condition.visit(this)
         write("body=")
         expression.body.visit(this)
-        level--;
+        level--
         write(")")
     }
 
@@ -107,7 +112,7 @@ class ASTPrinter(val output: PrintStream) : ASTVisitor {
             write("else_body=")
             expression.elseBody.visit(this)
         }
-        level--;
+        level--
         write(")")
     }
 

@@ -16,24 +16,15 @@ class ParsingTests {
 
                 """.trimIndent()
         )).root
-        val expectedTree = File(
-                Block(
-                        listOf(FunctionDefinition("foo",
-                                Block(
-                                        listOf(
-                                                ArithmeticBinaryExpression(
-                                                        IdentifierExpression("a", 2),
-                                                        IdentifierExpression("b", 2),
-                                                        ArithmeticBinaryOperator.Plus,
-                                                        2
-                                                )
-                                        ),
-                                        2
-                                ),
-                                listOf("a", "b"),
-                                1)
-                        ),
-                        1),
+        val expectedTree = File(FunctionDefinition("foo",
+                ArithmeticBinaryExpression(
+                        IdentifierExpression("a", 2),
+                        IdentifierExpression("b", 2),
+                        ArithmeticBinaryOperator.Plus,
+                        2
+                ),
+                listOf("a", "b"),
+                1),
                 1
         )
         assertEquals(expectedTree, tree)
@@ -46,30 +37,21 @@ class ParsingTests {
                        //nothing
 
                         foo();
-                        foo(c);
                         foo(a, b);
                 """
         )).root
         val expectedTree = File(
-                Block(
-                        listOf(
-                                FunctionCall("foo",
-                                        listOf(),
-                                        4
+                DoubleStatement(
+                        FunctionCall("foo",
+                                listOf(),
+                                4
+                        ),
+                        FunctionCall("foo",
+                                listOf(
+                                        IdentifierExpression("a", 5),
+                                        IdentifierExpression("b", 5)
                                 ),
-                                FunctionCall("foo",
-                                        listOf(
-                                                IdentifierExpression("c", 5)
-                                        ),
-                                        5
-                                ),
-                                FunctionCall("foo",
-                                        listOf(
-                                                IdentifierExpression("a", 6),
-                                                IdentifierExpression("b", 6)
-                                        ),
-                                        6
-                                )
+                                5
                         ),
                         4
                 ),
@@ -86,27 +68,17 @@ class ParsingTests {
                 """
         )).root
         val expectedTree = File(
-                Block(
-                        listOf(
-                                WhileStatement(
-                                        ComparingLogicExpression(
-                                                IdentifierExpression("a", 1),
-                                                IdentifierExpression("b", 1),
-                                                ComparingOperator.Greater,
-                                                1
-                                        ),
-                                        Block(
-                                                listOf(
-                                                        AssignmentStatement(
-                                                                "a",
-                                                                LiteralExpression(3, 2),
-                                                                2
-                                                        )
-                                                ),
-                                                2
-                                        ),
-                                        1
-                                )
+                WhileStatement(
+                        ComparingLogicExpression(
+                                IdentifierExpression("a", 1),
+                                IdentifierExpression("b", 1),
+                                ComparingOperator.Greater,
+                                1
+                        ),
+                        AssignmentStatement(
+                                "a",
+                                LiteralExpression(3, 2),
+                                2
                         ),
                         1
                 ),
@@ -129,45 +101,28 @@ class ParsingTests {
                 """
         )).root
         val expectedTree = File(
-                Block(
-                        listOf(
-                                IfStatement(
-                                        ComparingLogicExpression(
-                                                IdentifierExpression("a", 2),
-                                                IdentifierExpression("b", 2),
-                                                ComparingOperator.GreaterOrEqual,
-                                                2
-                                        ),
-                                        Block(
-                                                listOf(
-                                                        FunctionCall("foo", listOf(), 3)
-                                                ),
-                                                3
-                                        ),
-                                        null,
+                DoubleStatement(
+                        IfStatement(
+                                ComparingLogicExpression(
+                                        IdentifierExpression("a", 2),
+                                        IdentifierExpression("b", 2),
+                                        ComparingOperator.GreaterOrEqual,
                                         2
                                 ),
-                                IfStatement(
-                                        ComparingLogicExpression(
-                                                IdentifierExpression("c", 5),
-                                                IdentifierExpression("d", 5),
-                                                ComparingOperator.Equal,
-                                                5
-                                        ),
-                                        Block(
-                                                listOf(
-                                                        WriteStatement(IdentifierExpression("x", 6), 6)
-                                                ),
-                                                6
-                                        ),
-                                        Block(
-                                                listOf(
-                                                        ReadStatement(IdentifierExpression("x", 8), 8)
-                                                ),
-                                                8
-                                        ),
+                                FunctionCall("foo", listOf(), 3),
+                                null,
+                                2
+                        ),
+                        IfStatement(
+                                ComparingLogicExpression(
+                                        IdentifierExpression("c", 5),
+                                        IdentifierExpression("d", 5),
+                                        ComparingOperator.Equal,
                                         5
-                                )
+                                ),
+                                WriteStatement(IdentifierExpression("x", 6), 6),
+                                ReadStatement(IdentifierExpression("x", 8), 8),
+                                5
                         ),
                         2
                 ),
@@ -186,19 +141,19 @@ class ParsingTests {
                 """.trimIndent()
         )).root
         val expectedTree = File(
-                Block(
-                        listOf(
+                DoubleStatement(
+                        ArithmeticBinaryExpression(
                                 ArithmeticBinaryExpression(
-                                        ArithmeticBinaryExpression(
-                                                LiteralExpression(2, 1),
-                                                LiteralExpression(2, 1),
-                                                ArithmeticBinaryOperator.Minus,
-                                                1
-                                        ),
+                                        LiteralExpression(2, 1),
                                         LiteralExpression(2, 1),
                                         ArithmeticBinaryOperator.Minus,
                                         1
                                 ),
+                                LiteralExpression(2, 1),
+                                ArithmeticBinaryOperator.Minus,
+                                1
+                        ),
+                        DoubleStatement(
                                 ArithmeticBinaryExpression(
                                         ArithmeticBinaryExpression(
                                                 ArithmeticBinaryExpression(
@@ -220,47 +175,48 @@ class ParsingTests {
                                         ArithmeticBinaryOperator.Minus,
                                         2
                                 ),
-                                ArithmeticBinaryExpression(
-                                        LiteralExpression(3, 3),
+                                DoubleStatement(
                                         ArithmeticBinaryExpression(
-                                                LiteralExpression(4, 3),
-                                                LiteralExpression(5, 3),
-                                                ArithmeticBinaryOperator.Minus,
+                                                LiteralExpression(3, 3),
+                                                ArithmeticBinaryExpression(
+                                                        LiteralExpression(4, 3),
+                                                        LiteralExpression(5, 3),
+                                                        ArithmeticBinaryOperator.Minus,
+                                                        3
+                                                ),
+                                                ArithmeticBinaryOperator.Multiply,
                                                 3
-                                        ),
-                                        ArithmeticBinaryOperator.Multiply,
-                                        3
-                                ),
-                                LogicalBinaryExpression(
-                                        ComparingLogicExpression(
-                                                IdentifierExpression("a", 4),
-                                                IdentifierExpression("b", 4),
-                                                ComparingOperator.Equal,
-                                                4
                                         ),
                                         LogicalBinaryExpression(
                                                 ComparingLogicExpression(
-                                                        IdentifierExpression("c", 4),
-                                                        IdentifierExpression("d", 4),
+                                                        IdentifierExpression("a", 4),
+                                                        IdentifierExpression("b", 4),
                                                         ComparingOperator.Equal,
                                                         4
                                                 ),
-                                                ComparingLogicExpression(
-                                                        IdentifierExpression("k", 4),
-                                                        IdentifierExpression("p", 4),
-                                                        ComparingOperator.Equal,
+                                                LogicalBinaryExpression(
+                                                        ComparingLogicExpression(
+                                                                IdentifierExpression("c", 4),
+                                                                IdentifierExpression("d", 4),
+                                                                ComparingOperator.Equal,
+                                                                4
+                                                        ),
+                                                        ComparingLogicExpression(
+                                                                IdentifierExpression("k", 4),
+                                                                IdentifierExpression("p", 4),
+                                                                ComparingOperator.Equal,
+                                                                4
+                                                        ),
+                                                        LogicBinaryOperator.And,
                                                         4
                                                 ),
-                                                LogicBinaryOperator.And,
+                                                LogicBinaryOperator.Or,
                                                 4
                                         ),
-                                        LogicBinaryOperator.Or,
-                                        4
-                                )
-                        ),
+                                        3),
+                                2),
                         1),
-                1
-        )
+                1)
         assertEquals(expectedTree, tree)
     }
 }
