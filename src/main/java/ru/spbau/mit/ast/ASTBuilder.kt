@@ -181,19 +181,12 @@ object ASTBuilder {
                 visitAssignmentStatement(statement.assignmentStatement())
             statement.whileStatement() !== null ->
                 visitWhileStatement(statement.whileStatement())
-            statement.returnStatement() !== null ->
-                visitReturnStatement(statement.returnStatement())
             statement.readStatement() != null ->
                 visitReadStatement(statement.readStatement())
             statement.writeStatement() != null ->
                 visitWriteStatement(statement.writeStatement())
             else -> throw SyntaxException(statement.start.line)
         }
-    }
-
-    fun visitReturnStatement(statement: ReturnStatementContext): ReturnStatement {
-        val expression = visitExpression(statement.expression())
-        return ReturnStatement(expression, statement.start.line)
     }
 
     fun visitIfStatement(statement: IfStatementContext): IfStatement {

@@ -10,7 +10,6 @@ statement
     | whileStatement
     | ifStatement
     | assignmentStatement
-    | returnStatement
     | writeStatement
     | readStatement
     ;
@@ -22,7 +21,6 @@ parameterNames : (IDENTIFIER (',' IDENTIFIER)*)?;
 whileStatement : 'while' '(' logicExpression ')' blockWithBraces;
 ifStatement : 'if' '(' logicExpression ')' blockWithBraces ('else' blockWithBraces)?;
 assignmentStatement : IDENTIFIER ':=' arithmeticExpression LINE_SEPARATOR;
-returnStatement : 'return' expression LINE_SEPARATOR;
 expressionStatement : expression LINE_SEPARATOR;
 
 functionCall : IDENTIFIER '(' arguments ')';
