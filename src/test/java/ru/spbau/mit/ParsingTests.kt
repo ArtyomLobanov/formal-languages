@@ -81,7 +81,7 @@ class ParsingTests {
     fun whileCycle() {
         val tree = ASTBuilder.buildAST(CharStreams.fromString(
                 """  while(a > b) {
-                            a := 3;"
+                            a := 3;
                         }
                 """
         )).root
