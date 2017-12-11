@@ -18,8 +18,8 @@ writeStatement : 'lout' '<<' IDENTIFIER LINE_SEPARATOR;
 readStatement : 'lin' '>>' IDENTIFIER LINE_SEPARATOR;
 definitionStatment : 'define' IDENTIFIER '(' parameterNames ')' blockWithBraces;
 parameterNames : (IDENTIFIER (',' IDENTIFIER)*)?;
-whileStatement : 'while' '(' logicExpression ')' blockWithBraces;
-ifStatement : 'if' '(' logicExpression ')' blockWithBraces ('else' blockWithBraces)?;
+whileStatement : 'while' '(' expression ')' blockWithBraces;
+ifStatement : 'if' '(' expression ')' blockWithBraces ('else' blockWithBraces)?;
 assignmentStatement : IDENTIFIER ':=' arithmeticExpression LINE_SEPARATOR;
 expressionStatement : expression LINE_SEPARATOR;
 

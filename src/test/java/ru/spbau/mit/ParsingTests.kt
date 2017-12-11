@@ -11,7 +11,7 @@ class ParsingTests {
         val tree = ASTBuilder.buildAST(CharStreams.fromString(
                 """
                  define foo(a, b) {
-                     return a+b;
+                     a+b;
                  }
 
                 """.trimIndent()
@@ -21,13 +21,10 @@ class ParsingTests {
                         listOf(FunctionDefinition("foo",
                                 Block(
                                         listOf(
-                                                ReturnStatement(
-                                                        ArithmeticBinaryExpression(
-                                                                IdentifierExpression("a", 2),
-                                                                IdentifierExpression("b", 2),
-                                                                ArithmeticBinaryOperator.Plus,
-                                                                2
-                                                        ),
+                                                ArithmeticBinaryExpression(
+                                                        IdentifierExpression("a", 2),
+                                                        IdentifierExpression("b", 2),
+                                                        ArithmeticBinaryOperator.Plus,
                                                         2
                                                 )
                                         ),
