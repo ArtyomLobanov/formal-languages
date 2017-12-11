@@ -15,7 +15,6 @@ interface ASTVisitor {
     fun visitWhileStatement(expression: WhileStatement)
     fun visitIfStatement(expression: IfStatement)
     fun visitAssignmentStatement(expression: AssignmentStatement)
-    fun visitReturnStatement(expression: ReturnStatement)
     fun visitReadStatement(expression: ReadStatement)
     fun visitWriteStatement(expression: WriteStatement)
 }
@@ -135,15 +134,6 @@ data class AssignmentStatement(
         override val line: Int) : Statement() {
     override fun visit(visitor: ASTVisitor) {
         visitor.visitAssignmentStatement(this)
-    }
-
-}
-
-data class ReturnStatement(
-        val expression: Expression,
-        override val line: Int) : Statement() {
-    override fun visit(visitor: ASTVisitor) {
-        visitor.visitReturnStatement(this)
     }
 
 }

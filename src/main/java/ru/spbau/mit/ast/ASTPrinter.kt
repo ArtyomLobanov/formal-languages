@@ -81,35 +81,51 @@ class ASTPrinter(val output: PrintStream) : ASTVisitor {
     }
 
     override fun visitFunctionDefinition(expression: FunctionDefinition) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        write("FunctionDefinition(line=${expression.line}, name=${expression.name}, arguments: " +
+                expression.arguments.joinToString(separator = ", ") + ")")
     }
 
     override fun visitWhileStatement(expression: WhileStatement) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun visitIfStatement(expression: IfStatement) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun visitAssignmentStatement(expression: AssignmentStatement) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun visitReturnStatement(expression: ReturnStatement) {
-        write("ReturnStatement(line=${expression.line}, expression=")
+        write("WhileStatement(line=${expression.line}, ")
+        write("condition=")
         level++
-        expression.expression.visit(this)
+        expression.condition.visit(this)
+        write("body=")
+        expression.body.visit(this)
         level--;
         write(")")
     }
 
+    override fun visitIfStatement(expression: IfStatement) {
+        write("IfStatement(line=${expression.line}, ")
+        write("condition=")
+        level++
+        expression.condition.visit(this)
+        write("body=")
+        expression.body.visit(this)
+        if (expression.elseBody !== null) {
+            write("else_body=")
+            expression.elseBody.visit(this)
+        }
+        level--;
+        write(")")
+    }
+
+    override fun visitAssignmentStatement(expression: AssignmentStatement) {
+        write("AssignmentStatement(line=${expression.line}, variable=${expression.name},")
+        write("expression=")
+        level++
+        expression.expression.visit(this)
+        level--
+        write(")")
+    }
+
     override fun visitReadStatement(expression: ReadStatement) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        write("ReadStatement(line=${expression.line}, variable=${expression.identifier})")
     }
 
     override fun visitWriteStatement(expression: WriteStatement) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        write("WriteStatement(line=${expression.line}, variable=${expression.identifier})")
     }
 
 }
